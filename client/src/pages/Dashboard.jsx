@@ -11,7 +11,7 @@ const Dashboard = () => {
 
   const getDashboardData = async () => {
     try {
-      const token = await getToken()
+      const token = await getToken({ skipCache: true })
       if (!token) {
         setCreations([])
         return

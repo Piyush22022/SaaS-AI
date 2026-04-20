@@ -1,6 +1,6 @@
 # SaaS AI
 
-Quick.ai is a full-stack AI content workspace built with React, Vite, Express, Clerk, and Neon. It gives users one place to write articles, generate images, review resumes, and experiment with simple image editing tools.
+Quick.ai is a full-stack AI content workspace built with React, Vite, Express, Clerk, and Supabase. It gives users one place to write articles, generate images, review resumes, and experiment with simple image editing tools.
 
 ## What It Does
 
@@ -16,13 +16,14 @@ Quick.ai is a full-stack AI content workspace built with React, Vite, Express, C
 
 - `client/` - React frontend
 - `server/` - Express backend
+- `supabase/` - SQL schema for the database
 
 ## Tech Stack
 
 - Frontend: React, Vite, Tailwind CSS
 - Backend: Node.js, Express
 - Auth: Clerk
-- Database: Neon Postgres
+- Database: Supabase Postgres
 - AI: OpenAI / Groq / local fallback logic
 
 ## Local Development
@@ -49,7 +50,8 @@ VITE_API_URL=http://localhost:5000
 `server/.env`
 
 ```env
-DATABASE_URL=your_neon_postgres_connection_string
+SUPABASE_URL=your_supabase_project_url
+SUPABASE_SERVICE_ROLE_KEY=your_supabase_service_role_key
 CLERK_PUBLISHABLE_KEY=your_clerk_publishable_key
 CLERK_SECRET_KEY=your_clerk_secret_key
 ARTICLE_AI_PROVIDER=local
@@ -57,6 +59,12 @@ GROQ_API_KEY=optional
 OPENAI_API_KEY=optional
 OPENAI_IMAGE_MODEL=gpt-image-1
 OPENAI_IMAGE_SIZE=1024x1024
+```
+
+Run the schema file in the Supabase SQL editor before starting the server:
+
+```sql
+supabase/schema.sql
 ```
 
 ### 3. Start the backend
@@ -109,4 +117,3 @@ Frontend runs on `http://localhost:5173`.
 - The app includes local fallbacks when external AI keys are missing.
 - Background removal and object removal currently run in the browser.
 - Do not commit `.env` files.
-

@@ -1,4 +1,4 @@
-import { clerkClient, getAuth } from "@clerk/express";
+import { getAuth } from "@clerk/express";
 
 export const auth = async (req, res, next) => {
   try {
@@ -11,16 +11,9 @@ export const auth = async (req, res, next) => {
       });
     }
 
-    const user = await clerkClient.users.getUser(userId);
-
-    const privateMetadata = user.privateMetadata || {};
-
-    const free_usage = privateMetadata.free_usage || 0;
-    const plan = privateMetadata.plan || "free";
-
     req.userId = userId;
-    req.free_usage = free_usage;
-    req.plan = plan;
+    req.free_usage = 0;
+    req.plan = "free";
 
     next();
   } catch (error) {

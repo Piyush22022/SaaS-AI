@@ -32,7 +32,7 @@ const WriteArticle = () => {
     const prompt = `Write a ${selectedLength.text} article about: ${input.trim()}`
 
     try {
-      const token = await getToken()
+      const token = await getToken({ skipCache: true })
       if (!token) {
         setError('You must be signed in to generate an article.')
         setLoading(false)

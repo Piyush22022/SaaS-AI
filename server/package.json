@@ -13,7 +13,8 @@
   "license": "ISC",
   "dependencies": {
     "@clerk/express": "^2.1.4",
-    "@neondatabase/serverless": "^1.0.2",
+    "@neondatabase/serverless": "^1.1.0",
+    "@supabase/supabase-js": "^2.103.3",
     "axios": "^1.15.0",
     "cloudinary": "^2.9.0",
     "cors": "^2.8.6",

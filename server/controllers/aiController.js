@@ -305,11 +305,18 @@ export const generateArticle = async (req, res) => {
     });
 
     if (plan !== "premium") {
-      await clerkClient.users.updateUserMetadata(userId, {
-        privateMetadata: {
-          free_usage: free_usage + 1
-        }
-      });
+      try {
+        await clerkClient.users.updateUserMetadata(userId, {
+          privateMetadata: {
+            free_usage: free_usage + 1
+          }
+        });
+      } catch (metadataError) {
+        console.warn(
+          "[SaasAi] Failed to update Clerk usage metadata, but article generation succeeded:",
+          metadataError.message
+        );
+      }
     }
 
     res.json({

@@ -1,6 +1,6 @@
 # SaaS AI
 
-Quick.ai is a full-stack AI content workspace built with React, Vite, Express, Clerk, and Neon. It includes tools for writing articles, generating images, reviewing resumes, removing backgrounds, removing objects, and browsing community creations.
+Quick.ai is a full-stack AI content workspace built with React, Vite, Express, Clerk, and Supabase. It includes tools for writing articles, generating images, reviewing resumes, removing backgrounds, removing objects, and browsing community creations.
 
 ## Features
 
@@ -21,7 +21,7 @@ Quick.ai is a full-stack AI content workspace built with React, Vite, Express, C
 
 - Node.js 18+
 - npm
-- A Neon Postgres database
+- A Supabase Postgres database
 - Clerk account and keys
 
 ## Setup
@@ -50,7 +50,8 @@ VITE_API_URL=http://localhost:5000
 Create or update `server/.env`:
 
 ```env
-DATABASE_URL=your_neon_postgres_connection_string
+SUPABASE_URL=your_supabase_project_url
+SUPABASE_SERVICE_ROLE_KEY=your_supabase_service_role_key
 CLERK_PUBLISHABLE_KEY=your_clerk_publishable_key
 CLERK_SECRET_KEY=your_clerk_secret_key
 ARTICLE_AI_PROVIDER=local
@@ -59,6 +60,8 @@ OPENAI_API_KEY=optional_if_you_want_openai
 OPENAI_IMAGE_MODEL=gpt-image-1
 OPENAI_IMAGE_SIZE=1024x1024
 ```
+
+Run `supabase/schema.sql` in the Supabase SQL editor before starting the backend.
 
 ### 3. Run the backend
 
@@ -122,4 +125,3 @@ npm run build
 cd ..\server
 npm run server
 ```
-

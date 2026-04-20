@@ -32,7 +32,7 @@ const GenerateImages = () => {
     setGeneratedImage('')
 
     try {
-      const token = await getToken()
+      const token = await getToken({ skipCache: true })
 
       if (!token) {
         setError('You must be signed in to generate an image.')

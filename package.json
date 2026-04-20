@@ -1,0 +1,10 @@
+{
+  "name": "saas-ai",
+  "private": true,
+  "version": "1.0.0",
+  "scripts": {
+    "start": "npm start --prefix server",
+    "build": "npm run build --prefix client",
+    "postinstall": "npm install --prefix server && npm install --prefix client"
+  }
+}

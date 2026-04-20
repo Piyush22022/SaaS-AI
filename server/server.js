@@ -4,10 +4,9 @@ import dotenv from 'dotenv'
 import { clerkMiddleware } from '@clerk/express'
 import aiRouter from './routes/aiRoutes.js'
 import creationsRouter from './routes/creationsRoutes.js'
-import sql from './configs/db.js'
-import { insertCreation } from './services/creations.js'
+import { getPublicCreations, insertCreation } from './services/creations.js'
 
-dotenv.config()
+dotenv.config({ path: new URL('./.env', import.meta.url) })
 
 const app = express()
 const clientOrigins = (process.env.CLIENT_ORIGIN || 'http://localhost:5173')
@@ -63,19 +62,25 @@ function svgDataUrl({ title, subtitle, accent = '#4f46e5', accent2 = '#22c55e' }
 }
 
 async function seedCommunityImages() {
-  const [{ count }] = await sql`
-    SELECT COUNT(*)::int AS count
-    FROM creations
-    WHERE publish = true AND type = 'image'
-  `
+  let publicCreations = []
 
-  if (count > 0) return
+  try {
+    publicCreations = await getPublicCreations()
+  } catch (error) {
+    console.warn(
+      '[SaasAi] Unable to seed community images yet:',
+      error.message
+    )
+    return
+  }
+
+  if (publicCreations.length > 0) return
 
   const samples = [
     {
-      prompt: 'Neon cyberpunk city at midnight with rain and glowing signs',
+      prompt: 'Cyberpunk city at midnight with rain and glowing signs',
       content: svgDataUrl({
-        title: 'Neon City',
+        title: 'Cyber City',
         subtitle: 'Cyberpunk skyline with rain, reflections, and glowing streets',
         accent: '#1d4ed8',
         accent2: '#22c55e'
@@ -114,38 +119,9 @@ async function seedCommunityImages() {
 }
 
 async function bootstrap() {
-  await sql`
-    CREATE TABLE IF NOT EXISTS creations (
-      id SERIAL PRIMARY KEY,
-      user_id TEXT NOT NULL,
-      prompt TEXT NOT NULL,
-      content TEXT NOT NULL,
-      type TEXT NOT NULL,
-      publish BOOLEAN NOT NULL DEFAULT false,
-      likes TEXT[] NOT NULL DEFAULT '{}'::text[],
-      created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-      updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-    )
-  `
-
-  await sql`
-    ALTER TABLE creations
-    ADD COLUMN IF NOT EXISTS publish BOOLEAN NOT NULL DEFAULT false
-  `
-
-  await sql`
-    ALTER TABLE creations
-    ADD COLUMN IF NOT EXISTS likes TEXT[] NOT NULL DEFAULT '{}'::text[]
-  `
-
-  await sql`
-    ALTER TABLE creations
-    ADD COLUMN IF NOT EXISTS updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-  `
-
   await seedCommunityImages()
 
-  app.listen(PORT, () => {
+  app.listen(PORT, '0.0.0.0', () => {
     console.log(`🚀 Server running on http://localhost:${PORT}`)
     const groq = process.env.GROQ_API_KEY?.trim()
     const gemini = process.env.GEMINI_API_KEY?.trim()

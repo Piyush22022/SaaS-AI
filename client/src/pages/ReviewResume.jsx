@@ -30,7 +30,7 @@ const ReviewResume = () => {
     setAnalysis('')
 
     try {
-      const token = await getToken()
+      const token = await getToken({ skipCache: true })
       if (!token) {
         setError('You must be signed in to review a resume.')
         return
